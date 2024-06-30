@@ -42,9 +42,10 @@ io.on("connection", async (socket) => {
     old.map((e) => socket.emit("chat message", e));
   }
   socket.on("typing", (msg) => {
-    if (msg === null) return io.emit("typing", null);
+    console.log(msg, "typoing-----------");
+    if (msg === null) return socket.broadcast.emit("typing", null);
     const user = msg.username;
-    io.broadcast.emit("typing", user);
+    socket.broadcast.emit("typing", user);
   });
   socket.on("chat message", async (msg, username) => {
     let res;
@@ -52,8 +53,7 @@ io.on("connection", async (socket) => {
       const message = new Message({ content: msg, username });
       res = await message.save();
     } catch (err) {
-      odd();
-      return io.emit("Something Wrong Happend", 501);
+      return socket.eimit("Something Wrong Happend", 501);
     }
     io.emit("chat message", res);
   });
@@ -77,7 +77,7 @@ io.on("connection", async (socket) => {
         _id: { $gt: serverOffset },
       });
       console.log(messages, "messages runnning ");
-      messages.map((e) => io.emit("chat message", e));
+      messages.map((e) => socket.emit("chat message", e));
     } catch (err) {
       return;
     }

@@ -95,6 +95,7 @@
       socket.emit("typing", null);
     });
     socket.on("typing", (msg) => {
+      console.log(msg);
       if (msg === null) typing.textContent = "";
       else typing.textContent = msg + "is typing";
     });
@@ -104,6 +105,7 @@
       if (input.value) {
         socket.emit("chat message", input.value, "adam");
         input.value = "";
+        socket.emit("typing", null);
       }
     });
     const messages = document.getElementById("messages");
