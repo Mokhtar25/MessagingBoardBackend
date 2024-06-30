@@ -55,10 +55,16 @@
       #messages > li:nth-child(odd) {
         background: #efefef;
       }
+      .offset {
+        font-size: 20px;
+      }
     </style>
   </head>
   <body>
-    <ul id="messages"></ul>
+    <ul id="messages">
+      <span class="offset"> hiiiiiiii§</span>
+    </ul>
+    <p class="typing"></p>
     <form id="form" class="form" action="">
       <input id="input" autocomplete="off" class="input_form" /><button
         type="submit"
@@ -68,23 +74,52 @@
     </form>
   </body>
   <script>
-    const socket = io();
+    const socket = io({
+      auth: {
+        serverOffset: 0,
+      },
+    });
     const form = document.getElementById("form");
     const input = document.getElementById("input");
+    const offset1 = document.querySelector(".offset");
+    const typing = document.querySelector(".typing");
+
+    form.addEventListener("change", (e) => {
+      if (e.target.value !== "") socket.emit("typing", { username: "adam" });
+      else {
+        socket.emit("typing", null);
+      }
+    });
+
+    form.addEventListener("blur", () => {
+      socket.emit("typing", null);
+    });
+    socket.on("typing", (msg) => {
+      if (msg === null) typing.textContent = "";
+      else typing.textContent = msg + "is typing";
+    });
 
     form.addEventListener("submit", (e) => {
       e.preventDefault();
       if (input.value) {
-        socket.emit("chat message", input.value);
+        socket.emit("chat message", input.value, "adam");
         input.value = "";
       }
     });
     const messages = document.getElementById("messages");
     socket.on("chat message", (msg) => {
+      console.log(msg);
+
+      const offset = msg.id;
       const item = document.createElement("li");
-      item.textContent = msg;
+      item.textContent = msg.content;
       messages.appendChild(item);
       window.scrollTo(0, document.body.scrollHeight);
+      socket.auth.serverOffset = offset;
+      offset1.textContent = socket.auth.serverOffset;
+      console.log(offset, "----------", socket.auth.serverOffset);
+
+      console.log(socket.auth.serverOffset);
     });
   </script>
 </html>
