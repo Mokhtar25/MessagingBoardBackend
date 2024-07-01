@@ -43,7 +43,7 @@ io.on("connection", async (socket) => {
     old.map((e) => socket.emit("chat message", e));
   }
   socket.on("typing", (msg) => {
-    console.log(msg, "typoing-----------");
+    console.log(msg, "typing-----------");
     if (msg === null) return socket.broadcast.emit("typing", null);
     const user = msg.username;
     socket.broadcast.emit("typing", user);
@@ -61,23 +61,17 @@ io.on("connection", async (socket) => {
 
   // when someone is not reconved it will send new messages to everyone expect that one
   if (!socket.recovered) {
-    console.log("runnin");
+    console.log("Recovering");
     try {
       const serverOffset = socket.handshake.auth.serverOffset || 0;
 
       if (serverOffset === 0) {
-        console.log(
-          socket.handshake.auth.serverOffset,
-          "------------here is it ",
-        );
         return old();
       }
 
-      console.log(serverOffset, "serber offset");
       const messages = await Message.find({
         _id: { $gt: serverOffset },
       });
-      console.log(messages, "messages runnning ");
       messages.map((e) => socket.emit("chat message", e));
     } catch (err) {
       return;
