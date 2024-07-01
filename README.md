@@ -1,6 +1,6 @@
 # Live Messaging Board
 
-## Futures
+## Features
 
 ### * Live connection with web sockets and live updating messages 
 ### * Supports a lot of users at the same time 
