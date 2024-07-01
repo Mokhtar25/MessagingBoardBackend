@@ -19,16 +19,20 @@ mongoose
   });
 
 const app = express();
+app.use(express.static("dist"));
 const server = createServer(app);
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const io = new Server(server, {
   connectionStateRecovery: {},
+  cors: {
+    origin: "http://localhost:5173",
+  },
 });
 
-app.get("/", (req, res) => {
-  res.sendFile(join(__dirname, "index.html"));
-});
+// app.get("/", (req, res) => {
+//   res.sendFile(join(__dirname, "index.html"));
+// });
 
 io.on("connection", async (socket) => {
   console.log("a user connected");
@@ -53,7 +57,7 @@ io.on("connection", async (socket) => {
       const message = new Message({ content: msg, username });
       res = await message.save();
     } catch (err) {
-      return socket.eimit("Something Wrong Happend", 501);
+      return socket.emit("chat message", 501);
     }
     io.emit("chat message", res);
   });
@@ -84,6 +88,6 @@ io.on("connection", async (socket) => {
   }
 });
 
-server.listen(3000, () => {
+server.listen(4000, () => {
   console.log("server running at http://localhost:3000");
 });

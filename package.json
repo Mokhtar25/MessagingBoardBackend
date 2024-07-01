@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "start": "nodemon --watch index.js --watch modules",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "ui": "rm -rf dist && cd ../MessagingBoradFrontEnd/ && npm run build && mv dist ../MessagingBoradBackend/dist "
   },
   "keywords": [],
   "author": "",
