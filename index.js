@@ -1,18 +1,20 @@
 import express from "express";
 import { createServer } from "node:http";
-import { fileURLToPath } from "node:url";
-import { dirname, join } from "node:path";
 import { Server } from "socket.io";
-import message from "./modules/message.js";
 import mongoose from "mongoose";
 import { config } from "dotenv";
 import Message from "./modules/message.js";
 config();
 
+const URL =
+  process.env.NODE_ENV === "production"
+    ? process.env.MONGODB_URL
+    : process.env.TEST_MONGODB_URL;
+
 mongoose
-  .connect(process.env.MONGODB_URL)
+  .connect(URL)
   .then(() => {
-    console.log("connected to MongoDB", process.env.MONGODB_URL);
+    console.log("connected to MongoDB", URL);
   })
   .catch((error) => {
     console.log("error connection to MongoDB:", error.message);
@@ -82,7 +84,7 @@ io.on("connection", async (socket) => {
   }
 });
 
-const PORT = process.env.PORT || 3002;
+const PORT = process.env.PORT || 3001;
 server.listen(PORT, () => {
   console.log(`server running at ${PORT}`);
 });

@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "start": "NODE_ENV=production node index.js",
-    "start dev": "nodemon --watch index.js --watch modules",
+    "dev": "NODE_ENV=development  nodemon --watch index.js --watch modules",
     "test": "echo \"Error: no test specified\" && exit 1",
     "ui": "rm -rf dist && cd ../MessagingBoradFrontEnd/ && npm run build && mv dist ../MessagingBoradBackend/dist "
   },
