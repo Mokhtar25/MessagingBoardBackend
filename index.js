@@ -21,13 +21,10 @@ mongoose
 const app = express();
 app.use(express.static("dist"));
 const server = createServer(app);
-const __dirname = dirname(fileURLToPath(import.meta.url));
+// const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const io = new Server(server, {
   connectionStateRecovery: {},
-  cors: {
-    origin: "http://localhost:5173",
-  },
 });
 
 // app.get("/", (req, res) => {
@@ -88,6 +85,7 @@ io.on("connection", async (socket) => {
   }
 });
 
-server.listen(4000, () => {
-  console.log("server running at http://localhost:3000");
+const PORT = process.env.PORT || 3002;
+server.listen(PORT, () => {
+  console.log(`server running at ${PORT}`);
 });
